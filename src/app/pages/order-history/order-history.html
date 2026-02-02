@@ -1,0 +1,58 @@
+<div class="container py-5 fade-in" style="min-height: 80vh;">
+    <h1 class="fw-bold mb-2">My Orders</h1>
+    <p class="text-muted mb-5">View and track your past purchases.</p>
+
+    <div class="glass-panel border-0 shadow-lg overflow-hidden rounded-4" *ngIf="orders$ | async as orders">
+        <div class="table-responsive" *ngIf="orders.length > 0">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4 py-3 border-0">Order ID</th>
+                        <th class="py-3 border-0">Date Placed</th>
+                        <th class="py-3 border-0">Items Ordered</th>
+                        <th class="py-3 border-0">Total Amount</th>
+                        <th class="py-3 border-0">Status</th>
+                        <th class="py-3 border-0 text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    <tr *ngFor="let order of orders">
+                        <td class="ps-4 fw-medium text-primary-custom">#{{ order.id }}</td>
+                        <td class="text-muted">{{ order.date | date:'mediumDate' }}</td>
+                        <td>
+                            <div *ngFor="let item of order.items" class="d-flex align-items-center gap-2 mb-1">
+                                <img [src]="item.product.imageUrl" class="rounded"
+                                    style="width: 30px; height: 30px; object-fit: cover;">
+                                <span class="small text-dark">{{ item.product.name }} <span class="text-muted">x{{
+                                        item.quantity }}</span></span>
+                            </div>
+                        </td>
+                        <td class="fw-bold">RM {{ order.totalAmount }}</td>
+                        <td>
+                            <span class="badge rounded-pill px-3 py-2 fw-normal" [ngClass]="{
+                  'bg-success': order.status === 'Delivered',
+                  'bg-primary': order.status === 'Shipped',
+                  'bg-info text-dark': order.status === 'Paid',
+                  'bg-warning text-dark': order.status === 'Pending'
+                }">
+                                {{ order.status }}
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <button class="btn btn-sm btn-outline-secondary">Details</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div *ngIf="orders.length === 0" class="text-center py-5 bg-white">
+            <div class="mb-3">
+                <i class="bi bi-bag-x display-1 text-muted opacity-25"></i>
+            </div>
+            <h3 class="fw-bold text-muted">No orders found</h3>
+            <p class="text-muted">Looks like you haven't bought any furniture yet.</p>
+            <a routerLink="/" class="btn btn-primary-custom rounded-pill px-4 mt-2 shadow-sm">Start Shopping</a>
+        </div>
+    </div>
+</div>

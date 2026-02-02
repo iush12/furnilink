@@ -1,0 +1,51 @@
+<div class="container py-5 fade-in">
+    <div class="text-center mb-5">
+        <div class="d-inline-block p-3 rounded-circle bg-light mb-3">
+            <i class="bi bi-map text-primary-custom display-4"></i>
+        </div>
+        <h1 class="fw-bold mb-3 display-5">Find Nearest Shop</h1>
+        <p class="lead text-muted mb-4 max-w-2xl mx-auto">Locate the nearest COURTS Malaysia showroom to experience our
+            premium furniture collection in person.</p>
+
+        <button class="btn btn-primary-custom btn-lg rounded-pill shadow px-5 py-3 fw-bold" (click)="findNearest()"
+            [disabled]="isLoading">
+            <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+            <i *ngIf="!isLoading" class="bi bi-geo-alt-fill me-2"></i>
+            {{ isLoading ? 'Locating...' : 'Find Nearest Stores' }}
+        </button>
+
+        <div *ngIf="error" class="alert alert-danger mt-4 d-inline-block px-4 py-2 rounded-3">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
+        </div>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+        <!-- List -->
+        <div class="col-md-6 col-lg-4" *ngFor="let shop of shops$ | async; let i = index">
+            <div class="card h-100 border-0 shadow-sm glass-panel transition-all"
+                [class.border-primary]="i === 0 && shop.distance !== undefined">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm"
+                            [ngClass]="i === 0 && shop.distance !== undefined ? 'bg-primary-custom' : 'bg-secondary'"
+                            style="width: 50px; height: 50px;">
+                            <i class="bi bi-shop fs-4"></i>
+                        </div>
+                        <span *ngIf="shop.distance !== undefined" class="badge rounded-pill fs-6 px-3 py-2 shadow-sm"
+                            [ngClass]="i === 0 ? 'bg-success' : 'bg-light text-dark'">
+                            <i class="bi bi-cursor-fill me-1"></i> {{ shop.distance }} km
+                        </span>
+                    </div>
+
+                    <h5 class="fw-bold mb-2">{{ shop.name }}</h5>
+                    <p class="text-muted mb-4 flex-grow-1">{{ shop.address }}</p>
+
+                    <a [href]="'https://www.google.com/maps/dir/?api=1&destination=' + shop.latitude + ',' + shop.longitude"
+                        target="_blank" class="btn btn-outline-dark w-100 rounded-pill fw-medium hover-bg-primary">
+                        <i class="bi bi-map me-2"></i> Get Directions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

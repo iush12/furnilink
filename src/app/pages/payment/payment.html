@@ -1,0 +1,127 @@
+<div class="container py-5 fade-in">
+    <!-- Success State -->
+    <div *ngIf="paymentSuccess" class="py-5">
+        <div class="glass-panel p-5 rounded-4 max-w-md mx-auto text-center" style="max-width: 600px;">
+            <div class="mb-4">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center shadow"
+                    style="width: 80px; height: 80px; font-size: 3rem;">
+                    <i class="bi bi-check-lg"></i>
+                </div>
+            </div>
+            <h2 class="fw-bold mb-3 text-primary-custom">Payment Successful!</h2>
+            <p class="lead text-muted mb-5">Thank you, {{ shipping.name }}. Your order <strong>{{ orderId }}</strong>
+                has been successfully processed.</p>
+
+            <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                <button class="btn btn-primary-custom btn-lg shadow-sm" (click)="downloadReceipt()">
+                    <i class="bi bi-file-earmark-pdf me-2"></i> Download Receipt
+                </button>
+                <button [routerLink]="['/orders']" class="btn btn-outline-dark btn-lg">View My Orders</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Section -->
+    <div *ngIf="!paymentSuccess && product" class="row g-5">
+        <!-- Left: Form -->
+        <div class="col-lg-7">
+            <div class="mb-5">
+                <h3 class="fw-bold mb-4 text-primary-custom">1. Shipping Information</h3>
+                <form class="glass-panel p-4 rounded-4 bg-white">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-medium">Full Name</label>
+                            <input type="text" class="form-control form-control-lg" [(ngModel)]="shipping.name"
+                                name="name" placeholder="John Doe">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-medium">Street Address</label>
+                            <textarea class="form-control form-control-lg" [(ngModel)]="shipping.address" name="address"
+                                rows="2" placeholder="Unit, Building, Street..."></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">City</label>
+                            <input type="text" class="form-control form-control-lg" [(ngModel)]="shipping.city"
+                                name="city">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Postcode</label>
+                            <input type="text" class="form-control form-control-lg" [(ngModel)]="shipping.zip"
+                                name="zip">
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-medium">Phone Number</label>
+                            <input type="tel" class="form-control form-control-lg" [(ngModel)]="shipping.phone"
+                                name="phone" placeholder="+60...">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div>
+                <h3 class="fw-bold mb-4 text-primary-custom">2. Payment Method</h3>
+                <div class="p-4 border rounded-4 bg-white d-flex align-items-center">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment" id="paypal" checked>
+                        <label class="form-check-label ms-2 d-flex align-items-center gap-3" for="paypal">
+                            <span class="fs-5 fw-bold">PayPal</span>
+                            <i class="bi bi-paypal text-primary fs-3"></i>
+                        </label>
+                    </div>
+                </div>
+                <p class="text-muted small mt-2 ms-4 pl-3">You will be redirected to PayPal's secure sandbox environment
+                    to complete this purchase.</p>
+            </div>
+        </div>
+
+        <!-- Right: Summary -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-lg p-4 sticky-top" style="top: 100px; border-radius: 1.5rem;">
+                <h4 class="fw-bold mb-4">Order Summary</h4>
+
+                <div class="d-flex gap-3 mb-4">
+                    <div class="rounded-3 overflow-hidden bg-light" style="width: 80px; height: 80px; flex-shrink: 0;">
+                        <img [src]="product.imageUrl" class="w-100 h-100" style="object-fit: cover;">
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-truncate" style="max-width: 200px;">{{ product.name }}</h6>
+                        <span class="badge bg-secondary-custom mb-1">{{ product.category }}</span>
+                        <div class="text-muted small">Qty: 1</div>
+                    </div>
+                    <div class="ms-auto fw-bold">RM {{ product.price }}</div>
+                </div>
+
+                <hr class="my-4 opactiy-10">
+
+                <div class="d-flex justify-content-between mb-2 text-muted">
+                    <span>Subtotal</span>
+                    <span>RM {{ product.price }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-4 text-muted">
+                    <span>Shipping</span>
+                    <span class="text-success fw-bold">Free</span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-4 fs-4 fw-bold text-primary-custom">
+                    <span>Total</span>
+                    <span>RM {{ product.price }}</span>
+                </div>
+
+                <button class="btn btn-warning w-100 py-3 rounded-pill fw-bold fs-5 text-dark shadow-sm hover-elevate"
+                    (click)="processPayment()" [disabled]="isProcessing || !shipping.name || !shipping.address">
+                    <div *ngIf="!isProcessing" class="d-flex justify-content-center align-items-center gap-2">
+                        <span>Pay with</span> <i class="bi bi-paypal"></i>
+                    </div>
+                    <div *ngIf="isProcessing" class="d-flex justify-content-center align-items-center gap-2">
+                        <span class="spinner-border spinner-border-sm"></span>
+                        <span>Processing...</span>
+                    </div>
+                </button>
+
+                <div class="text-center mt-3">
+                    <small class="text-muted"><i class="bi bi-lock-fill me-1"></i> SSL Secure Payment</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
