@@ -1,0 +1,181 @@
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Premium Header Glassmorphism */
+.admin-header-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.header-bg-blob {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 0;
+    opacity: 0.5;
+}
+
+.blob-1 {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    top: -150px;
+    left: -50px;
+}
+
+.blob-2 {
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+    bottom: -150px;
+    right: -50px;
+}
+
+.hover-bg-light:hover {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Premium Revenue Card */
+.premium-revenue-card {
+    background: linear-gradient(145deg, #1e1b4b 0%, #312e81 100%);
+}
+
+.revenue-bg-shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.6;
+    z-index: 0;
+}
+
+.revenue-bg-shape.shape-1 {
+    width: 250px;
+    height: 250px;
+    background: #6366f1;
+    top: -100px;
+    right: -50px;
+}
+
+.revenue-bg-shape.shape-2 {
+    width: 200px;
+    height: 200px;
+    background: #ec4899;
+    bottom: -80px;
+    left: -50px;
+}
+
+.revenue-bg-shape.shape-3 {
+    width: 150px;
+    height: 150px;
+    background: #8b5cf6;
+    bottom: 20px;
+    right: 50px;
+    opacity: 0.4;
+}
+
+.icon-box-glass {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.badge-growth {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.w-max-content {
+    width: max-content;
+}
+
+/* Custom Chart */
+.chart-bar {
+    background-color: #f1f5f9;
+}
+
+.bar-inner {
+    background: linear-gradient(to top, #6366f1 0%, #a855f7 100%);
+    opacity: 0.85;
+    transition: all 0.3s ease;
+}
+
+.chart-col:hover .bar-inner {
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    transform: scaleY(1.02);
+    transform-origin: bottom;
+}
+
+.chart-col:hover .month-label {
+    color: #4f46e5 !important;
+    font-weight: 800 !important;
+}
+
+/* Tooltip Customization */
+.bar-value-tooltip {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chart-col:hover .bar-value-tooltip {
+    opacity: 1 !important;
+    transform: translateX(-50%) translateY(0) !important;
+}
+
+.tooltip-arrow {
+    bottom: -4px;
+    width: 8px;
+    height: 8px;
+    background: #212529;
+    transform: translateX(-50%) rotate(45deg);
+}
+
+/* General Utilities */
+.ls-1 { letter-spacing: 1px; }
+.ls-2 { letter-spacing: 2px; }
+
+.fs-7 { font-size: 0.85rem; }
+
+.transition-all {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.transition-hover:hover {
+    background-color: #f8fafc;
+}
+
+.transition-hover-up {
+    transition: all 0.3s ease;
+}
+
+.transition-hover-up:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+}
+
+.shadow-sm-hover {
+    transition: box-shadow 0.2s ease;
+}
+
+.shadow-sm-hover:hover {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
+
+.pointer-events-none {
+    pointer-events: none;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -6,7 +6,6 @@ import { jsPDF } from 'jspdf';
 import { Product, Order } from '../../models';
 import { OrderService } from '../../services/order';
 import { AuthService } from '../../services/auth';
-import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-payment',
@@ -32,7 +31,9 @@ export class Payment implements OnInit {
   constructor(
     private router: Router,
     private orderService: OrderService,
-    private authService: AuthService
+    private authService: AuthService,
+    private ngZone: NgZone,
+    private cdr: ChangeDetectorRef
   ) {
     const nav = this.router.getCurrentNavigation();
     if (nav?.extras.state && nav.extras.state['product']) {
@@ -42,8 +43,6 @@ export class Payment implements OnInit {
 
   ngOnInit(): void {
     if (!this.product) {
-      // Redirect if no product (e.g. reload page lose state)
-      // In real app, fetch from persisted cart or service
       this.router.navigate(['/']);
     }
 
@@ -59,22 +58,29 @@ export class Payment implements OnInit {
     if (!this.product) return;
 
     this.isProcessing = true;
+    this.cdr.detectChanges(); // Force UI to show spinner immediately
 
-    // Simulate PayPal interaction
+    // Run inside NgZone so Angular change detection picks up state changes after setTimeout
     setTimeout(() => {
-      this.completeOrder();
-    }, 2000);
+      this.ngZone.run(() => {
+        this.completeOrder();
+      });
+    }, 800);
   }
 
   completeOrder() {
-    if (!this.product) return;
+    if (!this.product) {
+      this.isProcessing = false;
+      this.router.navigate(['/']);
+      return;
+    }
 
     const user = this.authService.currentUserValue;
     this.orderId = 'ORD-' + Date.now();
 
     const newOrder: Order = {
       id: this.orderId,
-      userId: user ? user.id : 0, // 0 for guest
+      userId: user ? user.id : 0,
       items: [{ product: this.product, quantity: 1 }],
       totalAmount: this.product.price,
       date: new Date(),
@@ -82,9 +88,22 @@ export class Payment implements OnInit {
       paymentId: 'PAY-SANDBOX-' + Math.floor(Math.random() * 10000)
     };
 
-    this.orderService.createOrder(newOrder).subscribe(() => {
-      this.isProcessing = false;
-      this.paymentSuccess = true;
+    this.orderService.createOrder(newOrder).subscribe({
+      next: () => {
+        this.ngZone.run(() => {
+          this.isProcessing = false;
+          this.paymentSuccess = true;
+          this.cdr.detectChanges();
+        });
+      },
+      error: (err) => {
+        console.error('Order creation failed:', err);
+        this.ngZone.run(() => {
+          this.isProcessing = false;
+          this.cdr.detectChanges();
+          alert('Payment failed. Please try again.');
+        });
+      }
     });
   }
 
@@ -95,7 +114,7 @@ export class Payment implements OnInit {
 
     // Branding
     doc.setFontSize(20);
-    doc.setTextColor(15, 23, 42); // Primary color
+    doc.setTextColor(15, 23, 42);
     doc.text('FurniLink', 105, 20, { align: 'center' });
     doc.setFontSize(10);
     doc.text('by COURTS Malaysia', 105, 25, { align: 'center' });

@@ -26,7 +26,7 @@ A premium ecommerce web application built with Angular.
    ```bash
    ng serve
    ```
-   Navigate to `http://localhost:4200/`.
+   Navigate to `http://localhost:4322/`.
 
 ## Demo Credentials
 
